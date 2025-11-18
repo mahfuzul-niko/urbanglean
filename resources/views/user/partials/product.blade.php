@@ -79,7 +79,7 @@
 
     @endphp
 
-    <div class="col mb-30 py-3 rounded product_col " style="border: 1px solid #f2f2f2; border-radius: 10px;">
+    <div class="col mb-30 py-3  product_col " style="border: 1px solid #f2f2f2; border-radius: 6px;">
         <div class="product__items ">
             <div class="product__items--thumbnail">
 
