@@ -1,5 +1,5 @@
 <!-- Start footer section -->
-<footer class="footer__section" style="background-color:<?php echo $business->footer_bg_color ?? 'black'; ?> !important;">
+<footer class="footer__section mt-3" style="background-color:<?php echo $business->footer_bg_color ?? 'black'; ?> !important;">
     <div class="container-fluid">
 
         <div class="main__footer d-flex justify-content-between" style="padding-bottom: 5px !important;">
