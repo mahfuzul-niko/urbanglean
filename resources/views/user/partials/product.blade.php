@@ -109,7 +109,7 @@
                         href="{{ route('single.product', [$product->id, Str::slug($product->title)]) }}">{{ Str::limit($product->title, 35) }}</a>
                 </h4>
 
-                <div class="product__items--price">
+                <div class="product__items--price mb-3">
                     @if ($product->discount_type != 'no')
                         <?php
                         if ($product->discount_type == 'flat') {
@@ -129,47 +129,43 @@
                             class="current__price">৳{{ optional($stock_price)->price > 0 ? number_format(optional($stock_price)->price) : 0.0 }}</span>
                     @endif
                 </div>
-                <ul class="product__items--action">
+                {{-- <ul class="product__items--action">
                     <li class="product__items--action__list d-flex justify-content-center align-items-center gap-2">
                         @if ($product->type == 'single')
                             @if (optional($stock_price)->qty > 0)
-                                {{-- Buy Now --}}
+                              
                                 <button class="product__items--action__btn buy__now--cart"
                                     onclick="addToCart({{ $product->id }}, 'details', 'checkout', 'single')"
                                     type="button">
                                     <span class="add__to--cart__text"> Buy Now </span>
                                 </button>
-                                {{-- Add to cart --}}
+                               
                                 <button class="product__items--action__btn add__to--cart" style=""
                                     onclick="addToCart({{ $product->id }}, 'only', 'cart', 'single')" type="button">
                                     <span class="add__to--cart__text"> Add to cart</span>
                                 </button>
                             @else
-                                {{-- Out of Stock --}}
+                               
                                 <a class="product__items--action__btn add__to--cart" href="javascript:void(0)">
                                     <span class="add__to--cart__text">Out of Stock </span>
                                 </a>
                             @endif
                         @else
-                            {{-- Variations Product --}}
-                            @if (optional($stock_price)->qty > 0 || $variant_in_stock)
-                                {{-- Select Product --}}
+                          
+                            @if
                                 <a class="product__items--action__btn add__to--cart" style=""
                                     href="{{ route('single.product', [$product->id, Str::slug($product->title)]) }}">
                                     <span class="add__to--cart__text">Buy Now</span>
                                 </a>
                             @else
-                                {{-- Out of Stock --}}
+                    
                                 <a class="product__items--action__btn add__to--cart" href="javascript:void(0)">
                                     <span class="add__to--cart__text">Out of Stock </span>
                                 </a>
                             @endif
                         @endif
                     </li>
-
-
-
-                </ul>
+                </ul> --}}
             </div>
         </div>
     </div>
