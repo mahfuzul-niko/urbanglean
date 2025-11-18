@@ -79,8 +79,8 @@
 
     @endphp
 
-    <div class="col mb-30 py-3 rounded product_col">
-        <div class="product__items">
+    <div class="col mb-30 py-3 rounded product_col border  border-radius-6">
+        <div class="product__items ">
             <div class="product__items--thumbnail">
 
                 <a class="product__items--link"
