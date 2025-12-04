@@ -1154,6 +1154,7 @@ class PageController extends Controller
         $order->name = $request->name;
         $order->email = $request->email;
         $order->phone = $request->phone;
+        $order->note = $request->note;
         $order->district_id = $request->district_id;
         $order->area_id = $request->area_id ?? 0;
         $order->shipping_address = $request->shipping_address;
