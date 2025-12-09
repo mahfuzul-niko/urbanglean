@@ -228,7 +228,7 @@
                     </div>
                     <div class="form-group mb-3">
                         <label>Spaecial Notes<span class="text-danger"></span></label>
-                        <textarea name="note" id="" cols="30" rows="20" style="height:6.5rem;" required placeholder="Add your note" class="checkout__input--field border-radius-5 mb-2" ></textarea>
+                        <textarea name="note" id="" cols="30" rows="20" style="height:6.5rem;"  placeholder="Add your note" class="checkout__input--field border-radius-5 mb-2" ></textarea>
                         
                     </div>
 
