@@ -1063,6 +1063,7 @@ class PageController extends Controller
 
     public function order_create(Request $request)
     {
+        
 
         $cart_info = Cart::content();
 
