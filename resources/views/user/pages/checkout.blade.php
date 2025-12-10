@@ -158,6 +158,19 @@
                         <h3 class="title billing-title text-uppercase ls-10 pt-1 pb-3 mb-0">
                             Billing Details
                         </h3>
+                        <div class="col-md-6">
+                            @if ($errors->any())
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <ul class="mb-0">
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                                </div>
+                            @endif
+                        </div>
                         <div class="row gutter-sm">
                             <div class="col-xs-6 mb-3">
                                 <div class="form-group">
@@ -211,8 +224,8 @@
                                                 <td width="50%" class="form-group mb-3">
                                                     <div class="checkout__checkbox">
                                                         <input class="checkout__checkbox--input shipping_method"
-                                                            id="check{{ $district->id }}" type="radio" name="district_id"
-                                                            value="{{ $district->id }}">
+                                                            id="check{{ $district->id }}" type="radio"
+                                                            name="district_id" value="{{ $district->id }}">
                                                         <span class="checkout__checkbox--checkmark"></span>
                                                         <label class="checkout__checkbox--label"
                                                             for="check{{ $district->id }}">
