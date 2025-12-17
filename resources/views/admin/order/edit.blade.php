@@ -92,6 +92,7 @@
                                         <thead>
                                             <tr>
                                                 <th>S.N</th>
+                                                <th>Image</th>
                                                 <th>Product</th>
                                                 <th>Price</th>
                                                 <th>Qty</th>
@@ -100,6 +101,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+
                                             @foreach ($order->order_product as $product)
                                                 @php
                                                     $variation_info = '';
@@ -130,9 +132,16 @@
                                                             $variation_info = $color_info . $attribute_info;
                                                         }
                                                     }
+                                                    $image = App\Models\Product::where('id', $product->id)->value(
+                                                        'thumbnail_image',
+                                                    );
+                                                    // dd($product->id)
+                                                    // $image will be 'image.jpg' (string)
                                                 @endphp
                                                 <tr>
                                                     <td>{{ $loop->index + 1 }}</td>
+                                                    <td><img src="{{ asset('images/product/' . $image) }}"
+                                                            class="img-fluid" alt="" style="height:80px"></td>
                                                     <td>
                                                         {{ $product->product->title }}
                                                         <br>
@@ -173,7 +182,7 @@
                                                         {{ $order->coupon_status == 1 ? 'Coupon Applied (' . $order->coupon_discount_amount . ')' : 'Coupon Not Applied' }}
                                                     </span>
                                                 </td>
-                                                <td  align="right">Total:</td>
+                                                <td align="right">Total:</td>
                                                 <td>{{ env('CURRENCY') }}{{ $order->price + $order->delivery_charge }}
                                                 </td>
                                             </tr>
@@ -256,11 +265,94 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
+
                 {{-- Courier Start --}}
+                <div class="col-md-9 mb-4">
+                    <div class="shadow rounded bg-dark border card-body">
+
+                        <!-- Fraud Check Button -->
+                        <div class="text-end mb-3">
+                            <button id="fraudCheckBtn" class="btn btn-primary" data-phone="{{ $order->phone }}">
+                                <span class="btn-text">Fraud Check</span>
+                                <span class="spinner-border spinner-border-sm ms-2 d-none" role="status"
+                                    aria-hidden="true"></span>
+                            </button>
+                        </div>
+
+
+                        <!-- ====== STATS CARDS ====== -->
+                        <div class="row g-4 mb-4">
+                            <div class="col-sm-6 col-md-3">
+                                <div class="card text-center text-primary">
+                                    <div class="card-body">
+                                        <h6 class="card-title">Total Orders</h6>
+                                        <p id="totalOrders" class="card-text fs-2 fw-bold">0</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-3">
+                                <div class="card text-center text-success">
+                                    <div class="card-body">
+                                        <h6 class="card-title">Successful</h6>
+                                        <p id="successOrders" class="card-text fs-2 fw-bold">0</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-3">
+                                <div class="card text-center text-danger">
+                                    <div class="card-body">
+                                        <h6 class="card-title">Cancelled</h6>
+                                        <p id="cancelOrders" class="card-text fs-2 fw-bold">0</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-3">
+                                <div class="card text-center text-purple">
+                                    <div class="card-body">
+                                        <h6 class="card-title">Success Rate</h6>
+                                        <p id="successRate" class="card-text fs-2 fw-bold">0</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ====== COURIER TABLE ====== -->
+                        <div class="card text-dark mb-4">
+                            <div class="card-header bg-primary text-white fw-bold">
+                                Courier Summary
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle text-center mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th class="text-start">COURIER</th>
+                                            <th>TOTAL</th>
+                                            <th class="text-success">SUCCESS</th>
+                                            <th class="text-danger">CANCEL</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="courierTableBody">
+                                        <!-- Rows will be dynamically inserted here -->
+                                    </tbody>
+                                    <tfoot class="table-light fw-bold">
+                                        <tr>
+                                            <td>Total</td>
+                                            <td id="totalParcel">0</td>
+                                            <td class="text-success" id="totalSuccess">0</td>
+                                            <td class="text-danger" id="totalCancel">0</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
                 <div class="col-md-12 mb-5">
                     <div class="shadow rounded bg-light border card-body">
-                        <h5 class="text-bold">Courier Info</h5>
                         @if (!is_null($courierInfo))
                             <div class="row">
 
@@ -459,6 +551,75 @@
                 "autoWidth": false,
                 "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
             }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+        });
+    </script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- AJAX Script -->
+    <script>
+        $(document).ready(function() {
+            $('#fraudCheckBtn').click(function(e) {
+                e.preventDefault();
+
+                let phone = $(this).data('phone');
+                let $btn = $(this);
+                let $spinner = $btn.find('.spinner-border');
+                let $text = $btn.find('.btn-text');
+
+                // Show spinner, hide text
+                $spinner.removeClass('d-none');
+                $text.text('Checking...');
+
+                $.get("{{ route('fraud-check') }}", {
+                        phone: phone
+                    }, function(response) {
+                        if (response.status === "success") {
+
+                            // Update summary cards
+                            $('#totalOrders').text(response.courierData.summary.total_parcel);
+                            $('#successOrders').text(response.courierData.summary.success_parcel);
+                            $('#cancelOrders').text(response.courierData.summary.cancelled_parcel);
+                            $('#successRate').text(response.courierData.summary.success_ratio + "%");
+
+                            // Clear table body
+                            $('#courierTableBody').empty();
+
+                            // Populate table rows dynamically
+                            $.each(response.courierData, function(key, courier) {
+                                if (key === "summary") return; // skip summary
+
+                                let row = `
+                        <tr>
+                            <td class="text-start d-flex align-items-center">
+                                <img src="${courier.logo}" alt="${courier.name} Logo" height="28" class="me-2">
+                                ${courier.name}
+                            </td>
+                            <td>${courier.total_parcel}</td>
+                            <td class="text-success">${courier.success_parcel}</td>
+                            <td class="text-danger">${courier.cancelled_parcel}</td>
+                        </tr>
+                    `;
+                                $('#courierTableBody').append(row);
+                            });
+
+                            // Update footer totals
+                            $('#totalParcel').text(response.courierData.summary.total_parcel);
+                            $('#totalSuccess').text(response.courierData.summary.success_parcel);
+                            $('#totalCancel').text(response.courierData.summary.cancelled_parcel);
+
+                        } else {
+                            alert("Failed to fetch courier data.");
+                        }
+                    })
+                    .fail(function() {
+                        alert("An error occurred while fetching data.");
+                    })
+                    .always(function() {
+                        // Hide spinner, restore text
+                        $spinner.addClass('d-none');
+                        $text.text('Fraud Check');
+                    });
+            });
         });
     </script>
 @endsection

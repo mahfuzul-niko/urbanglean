@@ -158,32 +158,19 @@
                         <h3 class="title billing-title text-uppercase ls-10 pt-1 pb-3 mb-0">
                             Billing Details
                         </h3>
-                        <div class="col-md-6">
-                            @if ($errors->any())
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    <ul class="mb-0">
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
-                                </div>
-                            @endif
-                        </div>
                         <div class="row gutter-sm">
                             <div class="col-xs-6 mb-3">
                                 <div class="form-group">
                                     <label>Name<span class="text-danger">*</span></label>
                                     <input type="text" class="checkout__input--field border-radius-5" name="name"
-                                        value="{{ optional(Auth::user())->name . ' ' . optional(Auth::user())->last_name }}"
+                                        value="{{ optional(Auth::user())->name . ' ' . optional(Auth::user())->last_name }}" id="CustomerName"
                                         required>
                                 </div>
                             </div>
                             <div class="col-md-12 mb-3">
                                 <div class="form-group">
                                     <label>Phone<span class="text-danger">*</span></label>
-                                    <input type="text" class="checkout__input--field border-radius-5" name="phone"
+                                    <input type="text" class="checkout__input--field border-radius-5" name="phone" id="CustomerPhone"
                                         value="{{ optional(Auth::user())->phone }}" required>
                                 </div>
                             </div>
@@ -224,8 +211,8 @@
                                                 <td width="50%" class="form-group mb-3">
                                                     <div class="checkout__checkbox">
                                                         <input class="checkout__checkbox--input shipping_method"
-                                                            id="check{{ $district->id }}" type="radio"
-                                                            name="district_id" value="{{ $district->id }}">
+                                                            id="check{{ $district->id }}" type="radio" name="district_id"
+                                                            value="{{ $district->id }}">
                                                         <span class="checkout__checkbox--checkmark"></span>
                                                         <label class="checkout__checkbox--label"
                                                             for="check{{ $district->id }}">
@@ -266,16 +253,10 @@
                         </div>
                         <div class="form-group mb-3">
                             <label>Address<span class="text-danger">*</span></label>
-                            <textarea name="shipping_address" id="" cols="30" rows="20" style="height:6.5rem;" required
+                            <textarea name="shipping_address" id="CustomerAddress" cols="30" rows="20" style="height:6.5rem;" required
                                 placeholder="House number and street name" class="checkout__input--field border-radius-5 mb-2">{{ optional(Auth::user())->address }}</textarea>
 
                         </div>
-                        <div class="form-group mt-3">
-                            <label for="order-notes">Order notes (optional)</label>
-                            <textarea class="form-control mb-0" id="order-notes" name="note" cols="30" rows="4"
-                                placeholder="Notes about your order, e.g special notes for delivery"></textarea>
-                        </div>
-
 
 
                         <div class="cart__summary--total mb-10">
@@ -435,6 +416,41 @@
         function calculate_total() {
 
         }
+
+       
+
+        function autoSaveDraftOrder() {
+            let draftData = {
+                name: $('#CustomerName').val(),
+                phone: $('#CustomerPhone').val(),
+                shipping_address: $('#CustomerAddress').val(),
+                note: $('#CustomerNote').val(),
+
+                price: $('#subtotal').val(),
+                district_id: $('.shipping_method').val(),
+                delivery_charge: $('#shipping_charge').val(),
+                total_payable: $('#total').val(),
+                _token: '{{ csrf_token() }}',
+            };
+            //$.post('/autoSave', draftData);
+            url = "{{ route('autoSave') }}";
+            $.ajax({
+                url: url,
+                method: 'POST',
+                data: draftData,
+                success: function(response) {
+                    console.log(response);
+                    $('#draft-message').text(response.message).fadeIn().delay(1500).fadeOut();
+                },
+                error: function(xhr) {
+                    console.error(xhr.responseJSON);
+                    $('#draft-message').text('Failed to save draft').fadeIn().delay(2000).fadeOut();
+                }
+            });
+        }
+
+        // Call this function on input/cart change
+        $('input, select, textarea').on('change', autoSaveDraftOrder);
 
         function payment_setup(type) {
             if (type == 'cod') {
