@@ -163,15 +163,15 @@
                                 <div class="form-group">
                                     <label>Name<span class="text-danger">*</span></label>
                                     <input type="text" class="checkout__input--field border-radius-5" name="name"
-                                        value="{{ optional(Auth::user())->name . ' ' . optional(Auth::user())->last_name }}" id="CustomerName"
-                                        required>
+                                        value="{{ optional(Auth::user())->name . ' ' . optional(Auth::user())->last_name }}"
+                                        id="CustomerName" required>
                                 </div>
                             </div>
                             <div class="col-md-12 mb-3">
                                 <div class="form-group">
                                     <label>Phone<span class="text-danger">*</span></label>
-                                    <input type="text" class="checkout__input--field border-radius-5" name="phone" id="CustomerPhone"
-                                        value="{{ optional(Auth::user())->phone }}" required>
+                                    <input type="text" class="checkout__input--field border-radius-5" name="phone"
+                                        id="CustomerPhone" value="{{ optional(Auth::user())->phone }}" required>
                                 </div>
                             </div>
                             <div class="col-md-12 mb-5">
@@ -253,9 +253,14 @@
                         </div>
                         <div class="form-group mb-3">
                             <label>Address<span class="text-danger">*</span></label>
-                            <textarea name="shipping_address" id="CustomerAddress" cols="30" rows="20" style="height:6.5rem;" required
-                                placeholder="House number and street name" class="checkout__input--field border-radius-5 mb-2">{{ optional(Auth::user())->address }}</textarea>
+                            <textarea name="shipping_address" id="CustomerAddress" cols="30" rows="20" style="height:6.5rem;"
+                                required placeholder="House number and street name" class="checkout__input--field border-radius-5 mb-2">{{ optional(Auth::user())->address }}</textarea>
 
+                        </div>
+                        <div class="form-group mt-3">
+                            <label for="order-notes">Order notes (optional)</label>
+                            <textarea class="form-control mb-0" id="order-notes" name="note" cols="30" rows="4"
+                                placeholder="Notes about your order, e.g special notes for delivery"></textarea>
                         </div>
 
 
@@ -417,7 +422,7 @@
 
         }
 
-       
+
 
         function autoSaveDraftOrder() {
             let draftData = {
@@ -425,7 +430,6 @@
                 phone: $('#CustomerPhone').val(),
                 shipping_address: $('#CustomerAddress').val(),
                 note: $('#CustomerNote').val(),
-
                 price: $('#subtotal').val(),
                 district_id: $('.shipping_method').val(),
                 delivery_charge: $('#shipping_charge').val(),

@@ -135,7 +135,7 @@
                                                     $image = App\Models\Product::where('id', $product->id)->value(
                                                         'thumbnail_image',
                                                     );
-                                                    // dd($product->id)
+                                                    // dd($product->id) 
                                                     // $image will be 'image.jpg' (string)
                                                 @endphp
                                                 <tr>
@@ -169,14 +169,14 @@
                                             @endforeach
 
                                             <tr>
-                                                <td colspan="4" align="right">Delivery Charge:</td>
+                                                <td colspan="5" align="right">Delivery Charge:</td>
                                                 {{-- @if ($order->payment_method == 'cash on delivery') --}}
                                                 <td>{{ env('CURRENCY') }}
                                                     {{ $order->delivery_charge == null ? 0 : $order->delivery_charge }}
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td colspan="3" align="right">
+                                                <td colspan="4" align="right">
                                                     <span
                                                         class="badge {{ $order->coupon_status == 1 ? 'bg-success' : 'bg-danger' }}">
                                                         {{ $order->coupon_status == 1 ? 'Coupon Applied (' . $order->coupon_discount_amount . ')' : 'Coupon Not Applied' }}
